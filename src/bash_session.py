@@ -1,0 +1,2 @@
+class BashSession:
+    pass
