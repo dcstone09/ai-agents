@@ -1,2 +1,3 @@
 class EditorSession:
-    pass
+    def __init__(self):
+        self.logger = None
