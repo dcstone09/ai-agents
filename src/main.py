@@ -27,6 +27,7 @@ def main():
         str(uuid.uuid4())}"
     logger = SessionLogger(session_id=session_id, session_dir='.')
 
+    print("Creating session")
     if args.mode == 'editor':
         session = EditorSession()
     elif args.mode == 'bash':
@@ -34,6 +35,9 @@ def main():
 
     # Set the logger for the session
     session.logger = logger
+    print("Running session")
+    session.run(args.prompt)
+    print("Session complete")
 
 
 if __name__ == "__main__":
