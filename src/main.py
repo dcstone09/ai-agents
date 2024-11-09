@@ -20,24 +20,19 @@ def setup_args():
 
 def main():
     args = setup_args()
-    print(f"Prompt: {args.prompt}")
-    print(f"Mode: {args.mode}")
 
     session_id = f"{datetime.now().strftime('%Y%m%d_%H%M%S')}_{
         str(uuid.uuid4())}"
-    logger = SessionLogger(session_id=session_id, session_dir='.')
+    logger = SessionLogger(session_id=session_id, session_dir=SESSIONS_DIR)
 
-    print("Creating session")
     if args.mode == 'editor':
         session = EditorSession()
     elif args.mode == 'bash':
         session = BashSession()
 
     # Set the logger for the session
-    session.logger = logger
-    print("Running session")
+    session.set_logger(logger)
     session.run(args.prompt)
-    print("Session complete")
 
 
 if __name__ == "__main__":
