@@ -75,4 +75,4 @@ def test_run(bash_session, mock_logger):
             )
             
             # Verify logging occurred
-            bash_session.logger.info.assert_called_once_with(mock_response) 
+            mock_logger.logger.info.assert_called_once_with(mock_response) 
