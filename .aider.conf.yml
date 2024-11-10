@@ -243,7 +243,8 @@
 #lint: false
 
 ## Specify lint commands to run for different languages, eg: "python: flake8 --select=..." (can be used multiple times)
-#lint-cmd: xxx
+lint-cmd: npx eslint --fix
+
 ## Specify multiple values like this:
 #lint-cmd:
 #  - xxx
@@ -251,13 +252,13 @@
 #  - zzz
 
 ## Enable/disable automatic linting after changes (default: True)
-#auto-lint: true
+auto-lint: true
 
 ## Specify command to run tests
-# test-cmd: pytest
+test-cmd: npx jest
 
 ## Enable/disable automatic testing after changes (default: False)
-# auto-test: true
+auto-test: true
 
 ## Run tests and fix problems found
 # test: true
