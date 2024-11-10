@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { BashAgent } from './bash.agent';
-import { Logger } from 'nestjs-pino';
+import { getLoggerToken, Logger } from 'nestjs-pino';
 import Anthropic from '@anthropic-ai/sdk';
 import { execSync } from 'child_process';
 

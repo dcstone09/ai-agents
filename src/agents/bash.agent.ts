@@ -2,11 +2,14 @@ import { Injectable } from '@nestjs/common';
 import Anthropic from '@anthropic-ai/sdk';
 import { execSync } from 'child_process';
 import { BetaMessageParam } from '@anthropic-ai/sdk/resources/beta/messages/messages';
-import { Logger } from 'nestjs-pino';
+import { InjectPinoLogger, PinoLogger } from 'nestjs-pino';
 
 @Injectable()
 export class BashAgent {
-  constructor(private readonly logger: Logger) {}
+  constructor(
+    @InjectPinoLogger(BashAgent.name)
+    private readonly logger: PinoLogger,
+  ) {}
   async run(prompt: string): Promise<void> {
     const anthropic = new Anthropic();
 
@@ -51,6 +54,8 @@ export class BashAgent {
       const results = [];
       response.content.forEach((content) => {
         if (content.type === 'tool_use' && content.name === 'bash') {
+          const command = content.input['command'];
+          this.logger.info({ command }, 'Executing bash command');
           let output = '';
           try {
             output = execSync(content.input['command'], {
