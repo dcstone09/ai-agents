@@ -9,14 +9,13 @@ export class BashAgent {
   constructor(
     @InjectPinoLogger(BashAgent.name)
     private readonly logger: PinoLogger,
+    private readonly anthropic = new Anthropic(),
   ) {}
   async run(prompt: string): Promise<void> {
-    const anthropic = new Anthropic();
-
     const messages: BetaMessageParam[] = [{ role: 'user', content: prompt }];
 
     while (true) {
-      const response = await anthropic.beta.messages.create({
+      const response = await this.anthropic.beta.messages.create({
         model: 'claude-3-5-sonnet-20241022',
         max_tokens: 1024,
         tools: [

@@ -9,6 +9,7 @@ export class EditorAgent {
   constructor(
     @InjectPinoLogger(EditorAgent.name)
     private readonly logger: PinoLogger,
+    private readonly anthropic = new Anthropic(),
   ) {}
 
   private getPath(path: string) {
@@ -70,8 +71,6 @@ export class EditorAgent {
   }
 
   async run(prompt: string): Promise<void> {
-    const anthropic = new Anthropic();
-
     const handlers = {
       view: this.handleView.bind(this),
       create: this.handleCreate.bind(this),
@@ -82,7 +81,7 @@ export class EditorAgent {
     const messages: BetaMessageParam[] = [{ role: 'user', content: prompt }];
 
     while (true) {
-      const response = await anthropic.beta.messages.create({
+      const response = await this.anthropic.beta.messages.create({
         model: 'claude-3-5-sonnet-20241022',
         max_tokens: 1024,
         tools: [
