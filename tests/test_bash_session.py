@@ -22,7 +22,7 @@ def test_set_logger(bash_session, mock_logger):
     assert isinstance(bash_session.logger, logging.LoggerAdapter)
     assert bash_session.logger.extra['prefix'] == 'bash agent'
 
-async def test_run_tool_calls(bash_session):
+def test_run_tool_calls(bash_session):
     # Mock content blocks
     mock_content = [
         anthropic.types.ContentBlock(
@@ -44,7 +44,7 @@ async def test_run_tool_calls(bash_session):
         assert results[0] == "mocked bash output"
         mock_run_tool_call.assert_called_once()
 
-async def test_run(bash_session, mock_logger):
+def test_run(bash_session, mock_logger):
     bash_session.set_logger(mock_logger)
     
     mock_response = Mock()
