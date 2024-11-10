@@ -25,8 +25,8 @@ class BashSession:
         """Execute any bash tool calls and return their results"""
         results = []
         for block in content:
-            if block.type == "tool_use" and block.name == "bash":
-                command = block.parameters.get("command")
+            if block.get("type") == "tool_use" and block.get("name") == "bash":
+                command = block["parameters"].get("command")
                 self.logger.info(f"Executing bash command: {command}")
                 
                 try:
