@@ -17,10 +17,7 @@
 	// Use 'postCreateCommand' to run commands after the container is created.
 	"postCreateCommand": "uv sync",
 
-	"remoteEnv": {
-		"ANTHROPIC_API_KEY": "${localEnv:ANTHROPIC_API_KEY}",
-		"OPENAI_API_KEY": "${localEnv:OPENAI_API_KEY}"
-	}
+	"runArgs": ["--env-file",".devcontainer/devcontainer.env"]
 
 	// Configure tool-specific properties.
 	// "customizations": {},

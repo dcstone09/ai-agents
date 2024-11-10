@@ -24,7 +24,8 @@ class BashSession:
         results = []
         for block in content:
             if block.type == "tool_use" and block.name == "bash":
-                results.append(self.run_tool_call(block))
+                # results.append(self.run_tool_call(block))
+                print(block)
         return results
 
     def run(self, prompt: str):
