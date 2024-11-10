@@ -1,6 +1,5 @@
 .aider*
 .env
-AI_DOCS
 sessions/
 __pycache__/
 .devcontainer/devcontainer.env

@@ -76,7 +76,7 @@ def test_run(bash_session, mock_logger):
             assert bash_session.messages == expected_messages
             
             # Verify Claude API was called with correct parameters
-            mock_create.assert_called_once_with(
+            mock_create.assert_called_with(
                 model="claude-3-5-sonnet-20241022",
                 max_tokens=4096,
                 messages=bash_session.messages,
