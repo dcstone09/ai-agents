@@ -2,9 +2,11 @@ import { Injectable } from '@nestjs/common';
 import Anthropic from '@anthropic-ai/sdk';
 import { execSync } from 'child_process';
 import { BetaMessageParam } from '@anthropic-ai/sdk/resources/beta/messages/messages';
+import { Logger } from 'nestjs-pino';
 
 @Injectable()
 export class BashAgent {
+  constructor(private readonly logger: Logger) {}
   async run(prompt: string): Promise<void> {
     const anthropic = new Anthropic();
 
@@ -41,6 +43,7 @@ export class BashAgent {
       });
 
       if (response.stop_reason !== 'tool_use') {
+        // print out the last message
         console.log(response.content[0]['text']);
         break;
       }
@@ -48,16 +51,13 @@ export class BashAgent {
       const results = [];
       response.content.forEach((content) => {
         if (content.type === 'tool_use' && content.name === 'bash') {
-          // let tool_error = false;
           let output = '';
           try {
             output = execSync(content.input['command'], {
               encoding: 'utf-8',
             });
-            // console.log(output);
           } catch (error) {
-            // tool_error = true;
-            console.error(error);
+            this.logger.error(error);
           }
 
           results.push({
@@ -66,7 +66,6 @@ export class BashAgent {
               type: 'tool_result',
               content: output,
               tool_use_id: content.id,
-              // error: tool_error,
             },
           });
         }

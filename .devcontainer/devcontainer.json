@@ -12,7 +12,17 @@
 		}
 	},
 
-	"runArgs": ["--env-file",".devcontainer/devcontainer.env"]
+	"runArgs": [
+		"--env-file",
+		".devcontainer/devcontainer.env"
+	],
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"Orta.vscode-jest"
+			]
+		}
+	}
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	// "forwardPorts": [],
