@@ -21,11 +21,17 @@ class BashSession:
                                             'prefix': self.log_prefix})
 
     def run_tool_calls(self, content: List[anthropic.types.ContentBlock]):
+        """Execute any bash tool calls and return their results"""
         results = []
         for block in content:
             if block.type == "tool_use" and block.name == "bash":
-                # results.append(self.run_tool_call(block))
-                results.append(block)
+                self.logger.info(f"Executing bash command: {block.parameters}")
+                # TODO: Add actual bash command execution here
+                # For now just return mock result
+                results.append({
+                    "output": f"Simulated output for: {block.parameters}",
+                    "error": None
+                })
         return results
 
     def run(self, prompt: str):
@@ -40,7 +46,29 @@ class BashSession:
             betas=["computer-use-2024-10-22"],
         )
 
-        self.logger.info(response)
-        return response
-
+        self.logger.info(f"Got response: {response}")
+        
+        # Process any tool calls
         tool_results = self.run_tool_calls(response.content)
+        if tool_results:
+            # Add tool results to conversation
+            self.messages.append({
+                "role": "assistant",
+                "content": response.content
+            })
+            self.messages.append({
+                "role": "tool", 
+                "content": tool_results
+            })
+            
+            # Get final response after tool use
+            response = self.client.beta.messages.create(
+                model="claude-3-5-sonnet-20241022",
+                max_tokens=4096,
+                messages=self.messages,
+                system=BASH_SYSTEM_PROMPT,
+                tools=[{"type": "bash_20241022", "name": "bash"}],
+                betas=["computer-use-2024-10-22"],
+            )
+            
+        return response
