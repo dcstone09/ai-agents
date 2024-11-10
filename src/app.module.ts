@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { BashAgent } from './agents/bash.agent';
+import { BashCommand } from './commands/bash.command';
 
 @Module({
   imports: [],
-  controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, BashAgent, BashCommand],
 })
 export class AppModule {}
