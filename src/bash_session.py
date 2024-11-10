@@ -47,15 +47,17 @@ class BashSession:
         )
 
         self.logger.info(f"Got response: {response}")
+
+        # Add assistant response to conversation
+        self.messages.append({
+            "role": "assistant",
+            "content": response.content
+        })
         
         # Process any tool calls
         tool_results = self.run_tool_calls(response.content)
         if tool_results:
             # Add tool results to conversation
-            self.messages.append({
-                "role": "assistant",
-                "content": response.content
-            })
             self.messages.append({
                 "role": "tool", 
                 "content": tool_results
@@ -70,5 +72,11 @@ class BashSession:
                 tools=[{"type": "bash_20241022", "name": "bash"}],
                 betas=["computer-use-2024-10-22"],
             )
+            
+            # Add final response to conversation
+            self.messages.append({
+                "role": "assistant",
+                "content": response.content
+            })
             
         return response
