@@ -143,8 +143,6 @@ export class EditorAgent {
         role: 'user',
         content: [results[0].output],
       });
-
-      console.log(JSON.stringify(messages, null, 2));
     }
   }
 }
