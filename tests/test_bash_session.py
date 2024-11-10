@@ -25,12 +25,12 @@ def test_set_logger(bash_session, mock_logger):
 def test_run_tool_calls(bash_session):
     # Mock content blocks
     mock_content = [
-        anthropic.types.ContentBlock(
+        Mock(
             type="tool_use",
             name="bash",
             text="ls -la"
         ),
-        anthropic.types.ContentBlock(
+        Mock(
             type="text",
             text="Some regular text"
         )
