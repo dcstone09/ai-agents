@@ -1,34 +1,29 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { BashAgent } from './bash.agent';
-import { getLoggerToken, Logger } from 'nestjs-pino';
+import { getLoggerToken } from 'nestjs-pino';
 import Anthropic from '@anthropic-ai/sdk';
 import { execSync } from 'child_process';
 
 // Mock the external dependencies
-jest.mock('@anthropic-ai/sdk');
 jest.mock('child_process');
-jest.mock('nestjs-pino');
 
 describe('BashAgent', () => {
   let bashAgent: BashAgent;
-  let logger: Logger;
+  // let logger: Logger;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         BashAgent,
         {
-          provide: Logger,
-          useValue: {
-            error: jest.fn(),
-            log: jest.fn(),
-          },
+          provide: getLoggerToken(BashAgent.name),
+          useValue: console,
         },
       ],
     }).compile();
 
     bashAgent = module.get<BashAgent>(BashAgent);
-    logger = module.get<Logger>(Logger);
+    // logger = module.get<Logger>(Logger);
   });
 
   it('should be defined', () => {

@@ -2,23 +2,19 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { EditorAgent } from './editor.agent';
 import { getLoggerToken } from 'nestjs-pino';
 
+// Mock the external dependencies
+jest.mock('fs');
+
 describe('EditorAgent', () => {
   let agent: EditorAgent;
-  let mockLogger: any;
 
   beforeEach(async () => {
-    mockLogger = {
-      info: jest.fn(),
-      error: jest.fn(),
-      debug: jest.fn(),
-    };
-
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         EditorAgent,
         {
           provide: getLoggerToken(EditorAgent.name),
-          useValue: mockLogger,
+          useValue: console,
         },
       ],
     }).compile();
