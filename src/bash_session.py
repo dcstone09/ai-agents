@@ -1,6 +1,7 @@
 import anthropic
 import os
 import logging
+import subprocess
 from typing import List
 
 BASH_SYSTEM_PROMPT = "You are a helpful assistant that can help with bash commands."
@@ -25,13 +26,29 @@ class BashSession:
         results = []
         for block in content:
             if block.type == "tool_use" and block.name == "bash":
-                self.logger.info(f"Executing bash command: {block.parameters}")
-                # TODO: Add actual bash command execution here
-                # For now just return mock result
-                results.append({
-                    "output": f"Simulated output for: {block.parameters}",
-                    "error": None
-                })
+                command = block.parameters.get("command")
+                self.logger.info(f"Executing bash command: {command}")
+                
+                try:
+                    # Execute command and capture output
+                    process = subprocess.run(
+                        command,
+                        shell=True,
+                        capture_output=True,
+                        text=True
+                    )
+                    
+                    results.append({
+                        "output": process.stdout,
+                        "error": process.stderr if process.returncode != 0 else None
+                    })
+                    
+                except Exception as e:
+                    results.append({
+                        "output": None,
+                        "error": str(e)
+                    })
+                    
         return results
 
     def run(self, prompt: str):
