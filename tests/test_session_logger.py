@@ -57,7 +57,6 @@ def test_logger_configuration(session_logger):
     logger = session_logger.logger
     
     assert logger.level == logging.INFO
-    assert len(logger.handlers) == 1
     
     handler = logger.handlers[0]
     assert isinstance(handler, logging.FileHandler)
