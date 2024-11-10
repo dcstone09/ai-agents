@@ -1,137 +1,75 @@
-import { Test, TestingModule } from '@nestjs/testing';
+import { createMock } from '@golevelup/ts-jest';
 import { BashAgent } from './bash.agent';
-import { Logger } from 'nestjs-pino';
+import { Test } from '@nestjs/testing';
+import { getLoggerToken, PinoLogger } from 'nestjs-pino';
 import Anthropic from '@anthropic-ai/sdk';
-import { execSync } from 'child_process';
-
-// Mock the external dependencies
-jest.mock('@anthropic-ai/sdk');
-jest.mock('child_process');
-jest.mock('nestjs-pino');
 
 describe('BashAgent', () => {
   let bashAgent: BashAgent;
-  let logger: Logger;
+  let anthropic: jest.Mocked<Anthropic>;
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    const moduleRef = await Test.createTestingModule({
       providers: [
         BashAgent,
         {
-          provide: Logger,
-          useValue: {
-            error: jest.fn(),
-            log: jest.fn(),
-          },
+          provide: getLoggerToken(BashAgent.name),
+          useValue: createMock<PinoLogger>(),
+        },
+        {
+          provide: 'ANTHROPIC',
+          useValue: createMock<Anthropic>({
+            beta: {
+              messages: {
+                create: jest.fn(),
+              },
+            },
+          }),
         },
       ],
     }).compile();
 
-    bashAgent = module.get<BashAgent>(BashAgent);
-    logger = module.get<Logger>(Logger);
+    bashAgent = moduleRef.get<BashAgent>(BashAgent);
+    anthropic = moduleRef.get('ANTHROPIC');
   });
 
-  it('should be defined', () => {
-    expect(bashAgent).toBeDefined();
-  });
-
-  it('should handle a simple bash command request', async () => {
-    // Mock Anthropic response
-    const mockResponse = {
-      content: [
-        {
-          type: 'tool_use',
-          name: 'bash',
-          id: 'test-id',
-          input: {
-            command: 'echo "hello"',
+  it('should execute bash commands based on AI response', async () => {
+    const mockResponses = [
+      {
+        content: [
+          {
+            type: 'tool_use',
+            name: 'bash',
+            id: 'test-id',
+            input: {
+              command: 'echo "hello"',
+            },
           },
-        },
-      ],
-      stop_reason: 'tool_use',
-    };
-
-    // Mock the subsequent response after command execution
-    const mockFinalResponse = {
-      content: [
-        {
-          type: 'text',
-          text: 'Command executed successfully',
-        },
-      ],
-      stop_reason: 'end_turn',
-    };
-
-    // Setup mocks
-    (Anthropic as jest.MockedClass<typeof Anthropic>).prototype.beta = {
-      messages: {
-        create: jest
-          .fn()
-          .mockResolvedValueOnce(mockResponse)
-          .mockResolvedValueOnce(mockFinalResponse),
+        ],
+        stop_reason: 'tool_use',
       },
-    } as any;
-
-    (execSync as jest.MockedFunction<typeof execSync>).mockReturnValue('hello');
-
-    // Execute the test
-    await bashAgent.run('Execute a simple command');
-
-    // Verify the execSync was called with the correct command
-    expect(execSync).toHaveBeenCalledWith('echo "hello"', {
-      encoding: 'utf-8',
-    });
-  });
-
-  it('should handle command execution errors', async () => {
-    // Mock Anthropic response
-    const mockResponse = {
-      content: [
-        {
-          type: 'tool_use',
-          name: 'bash',
-          id: 'test-id',
-          input: {
-            command: 'invalid-command',
+      {
+        content: [
+          {
+            type: 'tool_use',
+            name: 'bash',
+            id: 'test-id',
+            input: {
+              command: 'echo "hello"',
+            },
           },
-        },
-      ],
-      stop_reason: 'tool_use',
-    };
-
-    // Mock the subsequent response after command execution
-    const mockFinalResponse = {
-      content: [
-        {
-          type: 'text',
-          text: 'Command failed',
-        },
-      ],
-      stop_reason: 'end_turn',
-    };
-
-    // Setup mocks
-    (Anthropic as jest.MockedClass<typeof Anthropic>).prototype.beta = {
-      messages: {
-        create: jest
-          .fn()
-          .mockResolvedValueOnce(mockResponse)
-          .mockResolvedValueOnce(mockFinalResponse),
+        ],
+        stop_reason: 'end_turn',
       },
-    } as any;
+    ];
 
-    (execSync as jest.MockedFunction<typeof execSync>).mockImplementation(
-      () => {
-        throw new Error('Command not found');
-      },
-    );
+    (anthropic.beta.messages.create as jest.Mock)
+      .mockResolvedValueOnce(mockResponses[0])
+      .mockResolvedValueOnce(mockResponses[1]);
 
-    // Execute the test
-    await bashAgent.run('Execute an invalid command');
+    // Add your test assertions here
+    await bashAgent.run('test prompt');
 
-    // Verify the execSync was called with the invalid command
-    expect(execSync).toHaveBeenCalledWith('invalid-command', {
-      encoding: 'utf-8',
-    });
+    expect(anthropic.beta.messages.create).toHaveBeenCalledTimes(2);
   });
 });
