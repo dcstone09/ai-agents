@@ -54,11 +54,26 @@ def test_run(bash_session, mock_logger):
             
             bash_session.run("test prompt")
             
-            # Verify the message was added to the messages list
-            assert bash_session.messages[-1] == {
-                "role": "user",
-                "content": "test prompt"
-            }
+            # Verify messages are in correct order
+            expected_messages = [
+                {
+                    "role": "user",
+                    "content": "test prompt"
+                },
+                {
+                    "role": "assistant",
+                    "content": []
+                },
+                {
+                    "role": "tool",
+                    "content": ["command output"]
+                },
+                {
+                    "role": "assistant",
+                    "content": []
+                }
+            ]
+            assert bash_session.messages == expected_messages
             
             # Verify Claude API was called with correct parameters
             mock_create.assert_called_once_with(
