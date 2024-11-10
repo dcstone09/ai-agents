@@ -1,6 +1,6 @@
 import Anthropic from '@anthropic-ai/sdk';
 import { BetaMessageParam } from '@anthropic-ai/sdk/resources/beta/messages/messages';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { InjectPinoLogger, PinoLogger } from 'nestjs-pino';
 import fs from 'fs';
 
@@ -9,7 +9,7 @@ export class EditorAgent {
   constructor(
     @InjectPinoLogger(EditorAgent.name)
     private readonly logger: PinoLogger,
-    private readonly anthropic = new Anthropic(),
+    @Inject('ANTHROPIC') private readonly anthropic: Anthropic,
   ) {}
 
   private getPath(path: string) {

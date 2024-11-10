@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import Anthropic from '@anthropic-ai/sdk';
 import { execSync } from 'child_process';
 import { BetaMessageParam } from '@anthropic-ai/sdk/resources/beta/messages/messages';
@@ -9,7 +9,7 @@ export class BashAgent {
   constructor(
     @InjectPinoLogger(BashAgent.name)
     private readonly logger: PinoLogger,
-    private readonly anthropic = new Anthropic(),
+    @Inject('ANTHROPIC') private readonly anthropic: Anthropic,
   ) {}
   async run(prompt: string): Promise<void> {
     const messages: BetaMessageParam[] = [{ role: 'user', content: prompt }];
