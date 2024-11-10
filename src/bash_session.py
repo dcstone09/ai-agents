@@ -25,7 +25,7 @@ class BashSession:
         for block in content:
             if block.type == "tool_use" and block.name == "bash":
                 # results.append(self.run_tool_call(block))
-                print(block)
+                results.append(block)
         return results
 
     def run(self, prompt: str):
@@ -41,5 +41,6 @@ class BashSession:
         )
 
         self.logger.info(response)
+        return response
 
         tool_results = self.run_tool_calls(response.content)

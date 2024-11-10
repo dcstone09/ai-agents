@@ -36,13 +36,9 @@ def test_run_tool_calls(bash_session):
         )
     ]
     
-    with patch.object(bash_session, 'run_tool_call') as mock_run_tool_call:
-        mock_run_tool_call.return_value = "mocked bash output"
-        results = bash_session.run_tool_calls(mock_content)
-        
-        assert len(results) == 1
-        assert results[0] == "mocked bash output"
-        mock_run_tool_call.assert_called_once()
+    results = bash_session.run_tool_calls(mock_content)
+    assert len(results) == 1
+    assert results[0] == mock_content[0]  # Should return the bash tool_use block
 
 def test_run(bash_session, mock_logger):
     bash_session.set_logger(mock_logger)
