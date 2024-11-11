@@ -60,6 +60,7 @@ export class BashAgent {
             output = execSync(content.input['command'], {
               encoding: 'utf-8',
             });
+            this.logger.info({ output }, 'Bash command output');
           } catch (error) {
             this.logger.error(error);
           }

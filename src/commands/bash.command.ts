@@ -8,7 +8,6 @@ export class BashCommand extends CommandRunner {
   }
 
   async run(passedParam: string[]): Promise<void> {
-    console.log('BashCommand');
     this.bashAgent.run(passedParam[0]);
   }
 }
