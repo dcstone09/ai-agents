@@ -28,6 +28,7 @@
     "jest-mock": "^29.7.0",
     "nest-commander": "^3.15.0",
     "nestjs-pino": "^4.1.0",
+    "pino-pretty": "^10.0.0",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.1",
     "uuid": "^11.0.2"

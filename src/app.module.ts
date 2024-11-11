@@ -5,9 +5,14 @@ import { LoggerModule } from 'nestjs-pino';
 import { EditorAgent } from './agents/editor.agent';
 import { EditorCommand } from './commands/editor.command';
 import Anthropic from '@anthropic-ai/sdk';
+import { pinoConfig } from './config/pino.config';
 
 @Module({
-  imports: [LoggerModule.forRoot()],
+  imports: [
+    LoggerModule.forRoot({
+      pinoHttp: pinoConfig,
+    }),
+  ],
   providers: [
     {
       provide: 'ANTHROPIC',
