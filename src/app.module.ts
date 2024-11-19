@@ -1,22 +1,12 @@
 import { Module } from '@nestjs/common';
-import { BashAgent } from './agents/bash.agent';
-import { BashCommand } from './commands/bash.command';
 import { LoggerModule } from 'nestjs-pino';
-import { EditorAgent } from './agents/editor.agent';
-import { EditorCommand } from './commands/editor.command';
-import Anthropic from '@anthropic-ai/sdk';
+import { BashTool } from './tools/bash.tool';
+import { FileTool } from './tools/file.tool';
+import { AssistantAgent } from './agents/assistant.agent';
 
 @Module({
   imports: [LoggerModule.forRoot()],
-  providers: [
-    {
-      provide: 'ANTHROPIC',
-      useFactory: () => new Anthropic(),
-    },
-    BashAgent,
-    BashCommand,
-    EditorAgent,
-    EditorCommand,
-  ],
+  providers: [BashTool, FileTool, AssistantAgent],
+  exports: [BashTool, FileTool, AssistantAgent],
 })
 export class AppModule {}
