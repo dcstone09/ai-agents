@@ -1,12 +1,13 @@
 import { Module } from '@nestjs/common';
 import { LoggerModule } from 'nestjs-pino';
-import { BashTool } from './tools/bash.tool';
-import { FileTool } from './tools/file.tool';
-import { AssistantAgent } from './agents/assistant.agent';
+import { CoreModule } from './core/core.module';
+import { AgentsModule } from './agents/agents.module';
+import { ToolsModule } from './tools/tools.module';
+import { MemoryModule } from './memory/memory.module';
 
 @Module({
-  imports: [LoggerModule.forRoot()],
-  providers: [BashTool, FileTool, AssistantAgent],
-  exports: [BashTool, FileTool, AssistantAgent],
+  imports: [LoggerModule.forRoot(), CoreModule, AgentsModule, ToolsModule, MemoryModule],
+  providers: [],
+  exports: [],
 })
-export class AppModule {}
+export class AppModule { }
