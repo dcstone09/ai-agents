@@ -10,6 +10,10 @@ import { DeleteFileTool } from 'src/tools/filesystem/delete-file.tool';
 import { FileExistsTool } from 'src/tools/filesystem/file-exists.tool';
 import { ReadFileTool } from 'src/tools/filesystem/read-file.tool';
 import { WriteFileTool } from 'src/tools/filesystem/write-file.tool';
+import { AddMemoryTool } from 'src/tools/memory/add-memory.tool';
+import { DeleteMemoryTool } from 'src/tools/memory/delete-memory.tool';
+import { GetMemoryTool } from 'src/tools/memory/get-memory.tool';
+import { ListMemoryTool } from 'src/tools/memory/list-memory.tool';
 
 @Injectable()
 export class ChatAgent extends BaseAgent {
@@ -24,6 +28,10 @@ export class ChatAgent extends BaseAgent {
     private readonly fileExistsTool: FileExistsTool,
     private readonly bashOperationsTool: BashOperationsTool,
     private readonly timeOperationsTool: TimeOperationsTool,
+    private readonly addMemoryTool: AddMemoryTool,
+    private readonly getMemoryTool: GetMemoryTool,
+    private readonly deleteMemoryTool: DeleteMemoryTool,
+    private readonly listMemoryTool: ListMemoryTool,
   ) {
     super();
 
@@ -42,7 +50,12 @@ export class ChatAgent extends BaseAgent {
         this.fileExistsTool,
         this.bashOperationsTool,
         this.timeOperationsTool,
+        this.addMemoryTool,
+        this.getMemoryTool,
+        this.deleteMemoryTool,
+        this.listMemoryTool,
       ],
+      checkpointSaver: this.checkpointer,
     });
   }
 
