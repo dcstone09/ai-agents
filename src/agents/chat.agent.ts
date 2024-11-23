@@ -2,17 +2,26 @@ import { Injectable } from '@nestjs/common';
 import { BaseAgent } from './base.agent';
 import { ChatAnthropic } from '@langchain/anthropic';
 import { createReactAgent } from '@langchain/langgraph/prebuilt';
-import { FileOperationsTool } from '../tools/filesystem/file-operations.tool';
 import { BashOperationsTool } from '../tools/bash/bash-operations.tool';
 import { MemorySaver } from '@langchain/langgraph';
 import { TimeOperationsTool } from '../tools/time/time-operations.tool';
+import { AppendFileTool } from 'src/tools/filesystem/append-file.tool';
+import { DeleteFileTool } from 'src/tools/filesystem/delete-file.tool';
+import { FileExistsTool } from 'src/tools/filesystem/file-exists.tool';
+import { ReadFileTool } from 'src/tools/filesystem/read-file.tool';
+import { WriteFileTool } from 'src/tools/filesystem/write-file.tool';
+
 @Injectable()
 export class ChatAgent extends BaseAgent {
   private readonly agent;
   private readonly checkpointer = new MemorySaver();
 
   constructor(
-    private readonly fileOperationsTool: FileOperationsTool,
+    private readonly readFileTool: ReadFileTool,
+    private readonly writeFileTool: WriteFileTool,
+    private readonly appendFileTool: AppendFileTool,
+    private readonly deleteFileTool: DeleteFileTool,
+    private readonly fileExistsTool: FileExistsTool,
     private readonly bashOperationsTool: BashOperationsTool,
     private readonly timeOperationsTool: TimeOperationsTool,
   ) {
@@ -26,11 +35,14 @@ export class ChatAgent extends BaseAgent {
     this.agent = createReactAgent({
       llm: model,
       tools: [
-        this.fileOperationsTool,
+        this.readFileTool,
+        this.writeFileTool,
+        this.appendFileTool,
+        this.deleteFileTool,
+        this.fileExistsTool,
         this.bashOperationsTool,
         this.timeOperationsTool,
       ],
-      checkpointSaver: this.checkpointer,
     });
   }
 

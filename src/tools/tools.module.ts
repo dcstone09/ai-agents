@@ -1,10 +1,30 @@
 import { Module } from '@nestjs/common';
-import { FileOperationsTool } from './filesystem/file-operations.tool';
+import { ReadFileTool } from './filesystem/read-file.tool';
+import { WriteFileTool } from './filesystem/write-file.tool';
+import { AppendFileTool } from './filesystem/append-file.tool';
+import { DeleteFileTool } from './filesystem/delete-file.tool';
+import { FileExistsTool } from './filesystem/file-exists.tool';
 import { BashOperationsTool } from './bash/bash-operations.tool';
 import { TimeOperationsTool } from './time/time-operations.tool';
 
 @Module({
-  providers: [FileOperationsTool, BashOperationsTool, TimeOperationsTool],
-  exports: [FileOperationsTool, BashOperationsTool, TimeOperationsTool],
+  providers: [
+    ReadFileTool,
+    WriteFileTool,
+    AppendFileTool,
+    DeleteFileTool,
+    FileExistsTool,
+    BashOperationsTool,
+    TimeOperationsTool,
+  ],
+  exports: [
+    ReadFileTool,
+    WriteFileTool,
+    AppendFileTool,
+    DeleteFileTool,
+    FileExistsTool,
+    BashOperationsTool,
+    TimeOperationsTool,
+  ],
 })
 export class ToolsModule {}
