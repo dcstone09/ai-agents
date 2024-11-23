@@ -5,7 +5,7 @@ import { createReactAgent } from '@langchain/langgraph/prebuilt';
 import { FileOperationsTool } from '../tools/filesystem/file-operations.tool';
 import { BashOperationsTool } from '../tools/bash/bash-operations.tool';
 import { MemorySaver } from '@langchain/langgraph';
-
+import { TimeOperationsTool } from '../tools/time/time-operations.tool';
 @Injectable()
 export class ChatAgent extends BaseAgent {
   private readonly agent;
@@ -14,6 +14,7 @@ export class ChatAgent extends BaseAgent {
   constructor(
     private readonly fileOperationsTool: FileOperationsTool,
     private readonly bashOperationsTool: BashOperationsTool,
+    private readonly timeOperationsTool: TimeOperationsTool,
   ) {
     super();
 
@@ -24,7 +25,11 @@ export class ChatAgent extends BaseAgent {
 
     this.agent = createReactAgent({
       llm: model,
-      tools: [this.fileOperationsTool, this.bashOperationsTool],
+      tools: [
+        this.fileOperationsTool,
+        this.bashOperationsTool,
+        this.timeOperationsTool,
+      ],
       checkpointSaver: this.checkpointer,
     });
   }
