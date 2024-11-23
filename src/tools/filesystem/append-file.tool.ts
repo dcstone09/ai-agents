@@ -9,7 +9,7 @@ const AppendFileSchema = z.object({
 });
 
 @Injectable()
-export class AppendFileTool extends BaseFileTool {
+export class AppendFileTool extends BaseFileTool<typeof AppendFileSchema> {
   name = 'append_file';
   description = 'Append content to a file at the specified path';
   schema = AppendFileSchema;

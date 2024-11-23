@@ -1,20 +1,23 @@
 import { Injectable } from '@nestjs/common';
-import { Tool } from '@langchain/core/tools';
 import { exec } from 'child_process';
 import { promisify } from 'util';
+import { BaseTool } from '../base.tool';
 import { BashOperation, BashOperationSchema } from './types';
+import { z } from 'zod';
 
 const execAsync = promisify(exec);
 
 @Injectable()
-export class BashOperationsTool extends Tool {
+export class BashOperationsTool extends BaseTool<typeof BashOperationSchema> {
   name = 'bash_operations';
   description = 'Tool for executing bash commands safely. Use with caution.';
+  schema = BashOperationSchema;
 
-  protected async _call(input: string): Promise<string> {
+  protected async _call(
+    operation: z.infer<typeof BashOperationSchema>,
+  ): Promise<string> {
     try {
-      const request = BashOperationSchema.parse(JSON.parse(input));
-      return await this.executeCommand(request);
+      return await this.executeCommand(operation);
     } catch (error) {
       if (error instanceof Error) {
         return `Error: ${error.message}`;

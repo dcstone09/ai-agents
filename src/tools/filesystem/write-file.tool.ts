@@ -9,7 +9,7 @@ const WriteFileSchema = z.object({
 });
 
 @Injectable()
-export class WriteFileTool extends BaseFileTool {
+export class WriteFileTool extends BaseFileTool<typeof WriteFileSchema> {
   name = 'write_file';
   description = 'Write content to a file at the specified path';
   schema = WriteFileSchema;

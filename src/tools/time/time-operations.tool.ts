@@ -1,23 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { StructuredTool } from '@langchain/core/tools';
+import { BaseTool } from '../base.tool';
 import { z } from 'zod';
-
-const TimeOperationSchema = z.object({
-  operation: z
-    .enum(['getCurrentTime', 'getCurrentDate', 'getTimestamp'])
-    .describe('The time operation to perform'),
-  params: z
-    .object({
-      timezone: z
-        .string()
-        .optional()
-        .describe('Optional timezone for time/date operations'),
-    })
-    .optional(),
-});
+import { TimeOperationSchema } from './types';
 
 @Injectable()
-export class TimeOperationsTool extends StructuredTool {
+export class TimeOperationsTool extends BaseTool<typeof TimeOperationSchema> {
   name = 'time_operations';
   description =
     'Tool for getting current time information. Operations available: getCurrentTime (returns current time), getCurrentDate (returns current date), getTimestamp (returns Unix timestamp)';
@@ -36,7 +23,7 @@ export class TimeOperationsTool extends StructuredTool {
     }
   }
 
-  private async handleOperation(request: TimeOperation): Promise<string> {
+  private async handleOperation(request: z.infer<typeof TimeOperationSchema>): Promise<string> {
     const { operation, params } = request;
     const now = new Date();
 

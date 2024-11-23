@@ -7,7 +7,7 @@ const FileExistsSchema = z.object({
 });
 
 @Injectable()
-export class FileExistsTool extends BaseFileTool {
+export class FileExistsTool extends BaseFileTool<typeof FileExistsSchema> {
   name = 'file_exists';
   description = 'Check if a file exists at the specified path';
   schema = FileExistsSchema;

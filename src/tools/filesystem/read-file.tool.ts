@@ -8,7 +8,7 @@ const ReadFileSchema = z.object({
 });
 
 @Injectable()
-export class ReadFileTool extends BaseFileTool {
+export class ReadFileTool extends BaseFileTool<typeof ReadFileSchema> {
   name = 'read_file';
   description = 'Read the contents of a file at the specified path';
   schema = ReadFileSchema;

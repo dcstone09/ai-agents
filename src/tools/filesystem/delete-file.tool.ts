@@ -8,7 +8,7 @@ const DeleteFileSchema = z.object({
 });
 
 @Injectable()
-export class DeleteFileTool extends BaseFileTool {
+export class DeleteFileTool extends BaseFileTool<typeof DeleteFileSchema> {
   name = 'delete_file';
   description = 'Delete a file at the specified path';
   schema = DeleteFileSchema;
