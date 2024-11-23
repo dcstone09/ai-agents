@@ -10,6 +10,7 @@ import { AddMemoryTool } from './memory/add-memory.tool';
 import { GetMemoryTool } from './memory/get-memory.tool';
 import { DeleteMemoryTool } from './memory/delete-memory.tool';
 import { ListMemoryTool } from './memory/list-memory.tool';
+import { WebFetchTool } from './web/web-fetch.tool';
 import { MemoryModule } from '../memory/memory.module';
 
 @Module({
@@ -26,6 +27,7 @@ import { MemoryModule } from '../memory/memory.module';
     GetMemoryTool,
     DeleteMemoryTool,
     ListMemoryTool,
+    WebFetchTool,
   ],
   exports: [
     ReadFileTool,
@@ -39,6 +41,7 @@ import { MemoryModule } from '../memory/memory.module';
     GetMemoryTool,
     DeleteMemoryTool,
     ListMemoryTool,
+    WebFetchTool,
   ],
 })
 export class ToolsModule {}

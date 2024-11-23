@@ -14,6 +14,7 @@ import { AddMemoryTool } from 'src/tools/memory/add-memory.tool';
 import { DeleteMemoryTool } from 'src/tools/memory/delete-memory.tool';
 import { GetMemoryTool } from 'src/tools/memory/get-memory.tool';
 import { ListMemoryTool } from 'src/tools/memory/list-memory.tool';
+import { WebFetchTool } from 'src/tools/web/web-fetch.tool';
 
 @Injectable()
 export class ChatAgent extends BaseAgent {
@@ -32,6 +33,7 @@ export class ChatAgent extends BaseAgent {
     private readonly getMemoryTool: GetMemoryTool,
     private readonly deleteMemoryTool: DeleteMemoryTool,
     private readonly listMemoryTool: ListMemoryTool,
+    private readonly webFetchTool: WebFetchTool,
   ) {
     super();
 
@@ -54,6 +56,7 @@ export class ChatAgent extends BaseAgent {
         this.getMemoryTool,
         this.deleteMemoryTool,
         this.listMemoryTool,
+        this.webFetchTool,
       ],
       checkpointSaver: this.checkpointer,
     });
