@@ -1,1 +1,9 @@
-Always update the test file when you update the code.
+We are using TypeScript.
+
+We are using NestJS.
+
+We are using LangChain.
+
+We are using LangGraph.
+
+We are using Bun as our package manager.

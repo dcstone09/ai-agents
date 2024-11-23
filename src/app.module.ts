@@ -1,22 +1,21 @@
 import { Module } from '@nestjs/common';
-import { BashAgent } from './agents/bash.agent';
-import { BashCommand } from './commands/bash.command';
 import { LoggerModule } from 'nestjs-pino';
-import { EditorAgent } from './agents/editor.agent';
-import { EditorCommand } from './commands/editor.command';
-import Anthropic from '@anthropic-ai/sdk';
+import { CoreModule } from './core/core.module';
+import { AgentsModule } from './agents/agents.module';
+import { ToolsModule } from './tools/tools.module';
+import { MemoryModule } from './memory/memory.module';
+import { CommandsModule } from './commands/commands.module';
 
 @Module({
-  imports: [LoggerModule.forRoot()],
-  providers: [
-    {
-      provide: 'ANTHROPIC',
-      useFactory: () => new Anthropic(),
-    },
-    BashAgent,
-    BashCommand,
-    EditorAgent,
-    EditorCommand,
+  imports: [
+    LoggerModule.forRoot(),
+    CoreModule,
+    AgentsModule,
+    ToolsModule,
+    MemoryModule,
+    CommandsModule,
   ],
+  providers: [],
+  exports: [],
 })
 export class AppModule {}
