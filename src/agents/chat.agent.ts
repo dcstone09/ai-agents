@@ -4,10 +4,12 @@ import { ChatAnthropic } from '@langchain/anthropic';
 import { createReactAgent } from '@langchain/langgraph/prebuilt';
 import { FileOperationsTool } from '../tools/filesystem/file-operations.tool';
 import { BashOperationsTool } from '../tools/bash/bash-operations.tool';
+import { MemorySaver } from '@langchain/langgraph';
 
 @Injectable()
 export class ChatAgent extends BaseAgent {
   private readonly agent;
+  private readonly checkpointer = new MemorySaver();
 
   constructor(
     private readonly fileOperationsTool: FileOperationsTool,
@@ -22,7 +24,8 @@ export class ChatAgent extends BaseAgent {
 
     this.agent = createReactAgent({
       llm: model,
-      tools: [fileOperationsTool, bashOperationsTool],
+      tools: [this.fileOperationsTool, this.bashOperationsTool],
+      checkpointSaver: this.checkpointer,
     });
   }
 
@@ -31,8 +34,16 @@ export class ChatAgent extends BaseAgent {
       messages: [{ role: 'user', content: input }],
     };
 
+    // Generate a unique thread ID for this conversation if not provided
+    const config = {
+      configurable: {
+        thread_id: 'default-thread',
+      },
+    };
+
     let finalResponse = '';
     const stream = await this.agent.stream(inputs, {
+      ...config,
       streamMode: 'values',
     });
 
