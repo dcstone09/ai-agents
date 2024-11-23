@@ -36,7 +36,7 @@ export class ChatAgent extends BaseAgent {
     super();
 
     const model = new ChatAnthropic({
-      modelName: 'claude-3-sonnet-20240229',
+      modelName: 'claude-3-5-sonnet-20241022',
       temperature: 0,
     });
 
